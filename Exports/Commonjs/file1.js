@@ -1,4 +1,9 @@
 let a =1;
-let b=4
+let b=4;
 
-module.exports= {a,b}
+function test() {
+   return "this is function";
+    
+}
+
+module.exports= {a,b, test}
