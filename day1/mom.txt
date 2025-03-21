@@ -1,0 +1,3 @@
+Custom module
+
+Module in Nodejs using require and type commonjs module format
