@@ -1,0 +1,11 @@
+let add=()=>{
+    return "added"
+}
+
+let multiply=()=>{
+    return "multiplied"
+}
+
+let name="Kartik Yadav"
+
+module.exports= {add, multiply, name}
