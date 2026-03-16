@@ -1,3 +1,5 @@
+const enquiryModel = require("../../models/enquiry.model");
+
 let insertQuery = (req, res) => {
   let { sName, sEmail, sNumber, sMessage } = req.body;
 
