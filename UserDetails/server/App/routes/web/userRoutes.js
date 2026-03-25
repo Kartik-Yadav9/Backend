@@ -1,7 +1,21 @@
-let express= require("express")
-const { insert } = require("../../controllers/web/UserController")
-let userRoutes= express.Router()
+let express = require("express");
+const {
+  insert,
+  list,
+  dlt,
+  update,
+  findData
+} = require("../../controllers/web/UserController");
+let userRoutes = express.Router();
 
-userRoutes.post("/insert", insert)
+userRoutes.post("/insert", insert);
 
-module.exports= userRoutes
+userRoutes.get("/list", list);
+
+userRoutes.delete("/delete/:id", dlt);
+
+userRoutes.get("/find/:id", findData)
+
+userRoutes.put("/update/:id", update);
+
+module.exports = userRoutes;
