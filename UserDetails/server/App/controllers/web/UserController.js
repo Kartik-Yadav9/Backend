@@ -1,6 +1,6 @@
 const { response } = require("express");
 const UserModel = require("../../models/UserModel");
-const e = require("express");
+// const e = require("express");
 
 let insert = async (req, res) => {
   try {
