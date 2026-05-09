@@ -1,160 +1,65 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useAuth } from "./context/AuthContext";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import UserDashboard from "./components/UserDashboard";
 
 function App() {
-  const [data, setData] = useState({
-    name: "",
-    email: "",
-    number: "",
-    message: "",
-    _id: "",
-  });
-  const [getData, setGetData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [showAuth, setShowAuth] = useState("login"); // "login" or "register"
+  const { user, isAuthenticated, logout } = useAuth();
 
-  const api = import.meta.env.VITE_API_URL;
-  //=======================Post===========================
+  // Show auth form if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div>
+        <div style={{ textAlign: "center", padding: "20px" }}>
+          <h1>User Management System</h1>
+          <p>Please login or register to continue</p>
+        </div>
+        {showAuth === "login" ? (
+          <Login onToggle={() => setShowAuth("register")} />
+        ) : (
+          <Register onToggle={() => setShowAuth("login")} />
+        )}
+      </div>
+    );
+  }
 
-  let handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true)
-      if (data._id) {
-        await axios.put(`${api}/update/${data._id}`, data);
-      } else {
-        await axios.post(`${api}/insert`, data);
-      }
-      fetchData();
-      setData({
-        name: "",
-        email: "",
-        number: "",
-        message: "",
-        _id: "",
-      });
-    } catch (err) {
-      console.log(err);
-    }finally{
-      setLoading(false)
-    }
-  };
-
-  let handleChange = (e) => {
-    let { name, value } = e.target;
-    setData((prev) => ({ ...prev, [name]: value }));
-  };
-  //=======================get===========================
-
-  let fetchData = async () => {
-    try {
-      setLoading(true);
-      let res = await axios.get(`${api}/list`);
-      setGetData(res?.data?.list || []);
-      console.log(res.data.list);
-    } catch (err) {
-      console.log(err);
-    }finally{
-      setLoading(false)
-    }
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
-  //=======================update===========================
-  let handleUpdate = async (id) => {
-    try {
-      let res = await axios.get(`${api}/find/${id}`);
-      setData(res?.data?.row || {}); //state is coming in obj
-      console.log(res.data.row);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const handleDlt = async (id) => {
-    try {
-      let dlt = await axios.delete(`${api}/delete/${id}`);
-      console.log("dlt", dlt.data);
-      fetchData();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
+  // Show main app if authenticated
   return (
     <div>
-      <p>Form</p>
-      <form onSubmit={handleSubmit}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "20px",
+          backgroundColor: "#f8f9fa",
+          marginBottom: "20px",
+        }}
+      >
+        <h1>User Management System</h1>
         <div>
-          <label>name</label>
-          <input
-            type="text"
-            onChange={handleChange}
-            name="name"
-            value={data.name}
-          />
+          <span style={{ marginRight: "15px" }}>
+            Welcome, {user?.name || "User"}
+          </span>
+          <button
+            onClick={logout}
+            style={{
+              padding: "8px 16px",
+              backgroundColor: "#dc3545",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            Logout
+          </button>
         </div>
-        <div>
-          <label>email</label>
-          <input
-            type="email"
-            onChange={handleChange}
-            name="email"
-            value={data.email}
-          />
-        </div>
-        <div>
-          <label>number</label>
-          <input
-            type="number"
-            onChange={handleChange}
-            name="number"
-            value={data.number}
-          />
-        </div>
-        <div>
-          <label>message</label>
-          <textarea
-            cols={20}
-            rows={4}
-            onChange={handleChange}
-            name="message"
-            value={data.message}
-          />
-        </div>
-        <button type="submit" disabled={loading}>{loading ? "saving" : "submit"}</button>
-      </form>
-      <div>
-        <p>table</p>
-        {loading && <div>loading....</div>}
-        <table>
-          <thead>
-            <tr>
-              <th>name</th>
-              <th>email</th>
-              <th>number</th>
-              <th>message</th>
-              <th>button</th>
-            </tr>
-          </thead>
-          <tbody>
-            {getData?.map((item) => {
-              return (
-                <tr key={item._id}>
-                  <td>{item.name}</td>
-                  <td>{item.email}</td>
-                  <td>{item.number}</td>
-                  <td>{item.message}</td>
-                  <td>
-                    <button onClick={() => handleDlt(item._id)}>delete</button>
-                    <button onClick={() => handleUpdate(item._id)}>edit</button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
       </div>
+
+      <UserDashboard isAuthenticated={isAuthenticated} />
     </div>
   );
 }

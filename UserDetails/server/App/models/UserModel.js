@@ -1,6 +1,6 @@
-let mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-let userSchema = mongoose.Schema({
+const userSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -8,14 +8,16 @@ let userSchema = mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   number: {
     type: String,
     required: true,
+    unique: true,
   },
   message: {
     type: String,
-    required: true,
+    required: false,
   },
 });
 

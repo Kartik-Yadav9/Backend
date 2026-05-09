@@ -1,0 +1,29 @@
+app/
+├── (public)/
+│   ├── login/
+│   │   └── page.tsx
+│   ├── register/
+│   │   └── page.tsx
+│   └── layout.tsx
+│
+├── (protected)/
+│   ├── dashboard/
+│   │   └── page.tsx
+│   ├── profile/
+│   │   └── page.tsx
+│   ├── settings/
+│   │   └── page.tsx
+│   └── layout.tsx
+│
+├── api/
+│   └── auth/
+│       ├── login/route.ts
+│       ├── register/route.ts
+│       ├── logout/route.ts
+│       ├── me/route.ts
+│       └── refresh/route.ts
+│
+├── layout.tsx
+└── page.tsx
+
+middleware.ts
