@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 import UserTable from "./UserTable";
+import { apiClient } from "@/lib/apiClient";
 
-axios.defaults.baseURL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/website/api";
-axios.defaults.withCredentials = true;
+
 
 const UserDashboard = () => {
   const [data, setData] = useState({
@@ -23,7 +21,7 @@ const UserDashboard = () => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("/list");
+      const res = await apiClient.get("/list");
       setGetData(res?.data?.list || []);
     } catch (err) {
       console.log(err);
@@ -39,16 +37,16 @@ const UserDashboard = () => {
   }, []);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       setLoading(true);
       if (data._id) {
-        await axios.put(`/update/${data._id}`, data, {
+        await apiClient.put(`/update/${data._id}`, data, {
           headers: { "Content-Type": "application/json" },
         });
         toast.success("Record updated successfully.");
       } else {
-        await axios.post("/insert", data, {
+        await apiClient.post("/insert", data, {
           headers: { "Content-Type": "application/json" },
         });
         toast.success("Record created successfully.");
@@ -77,7 +75,7 @@ const UserDashboard = () => {
 
   const handleUpdate = async (id) => {
     try {
-      const res = await axios.get(`/find/${id}`);
+      const res = await apiClient.get(`/find/${id}`);
       setData(res?.data?.row || {});
       toast.success("Record loaded for editing.");
     } catch (err) {
@@ -88,7 +86,7 @@ const UserDashboard = () => {
 
   const handleDlt = async (id) => {
     try {
-      await axios.delete(`/delete/${id}`);
+      await apiClient.delete(`/delete/${id}`);
       await fetchData();
       toast.success("Record deleted successfully.");
     } catch (err) {
